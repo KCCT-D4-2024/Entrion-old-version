@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: entrion
+      POSTGRES_PASSWORD: entrion
+      POSTGRES_DB: entrion
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
