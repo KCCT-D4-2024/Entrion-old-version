@@ -18,9 +18,9 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: entrion
-  password: entrion
-  host: localhost
+  username: <%= ENV.fetch("POSTGRES_USER") { 'entrion' } %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD") { 'entrion' } %>
+  host: <%= ENV.fetch("DB_HOST") { 'db' } %>
   port: 5432
 
 
@@ -85,5 +85,5 @@ test:
 production:
   <<: *default
   database: entrion_production
-  username: entrion
-  password: <%= ENV["ENTRION_DATABASE_PASSWORD"] %>
+  username: <%= ENV.fetch("POSTGRES_USER") { 'entrion' } %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD") { 'entrion' } %>
