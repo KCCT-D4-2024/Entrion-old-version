@@ -13,7 +13,7 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client gnupg unzip && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client gnupg unzip dos2unix && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
@@ -37,11 +37,11 @@ ENV PATH=/usr/local/node/bin:$PATH
 # Install Node.js based on the platform (x86_64 or ARM64)
 RUN ARCH="$(dpkg --print-architecture)" && \
     if [ "$ARCH" = "amd64" ]; then \
-        curl -sL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" | tar -xJ -C /usr/local --strip-components=1; \
+    curl -sL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" | tar -xJ -C /usr/local --strip-components=1; \
     elif [ "$ARCH" = "arm64" ]; then \
-        curl -sL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-arm64.tar.xz" | tar -xJ -C /usr/local --strip-components=1; \
+    curl -sL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-arm64.tar.xz" | tar -xJ -C /usr/local --strip-components=1; \
     else \
-        echo "Unsupported architecture: $ARCH" && exit 1; \
+    echo "Unsupported architecture: $ARCH" && exit 1; \
     fi
 
 # Install Bun (JavaScript bundler)
@@ -63,6 +63,8 @@ RUN bun add sass
 
 # Copy application code
 COPY . .
+
+RUN dos2unix bin/*
 
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
